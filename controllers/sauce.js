@@ -21,8 +21,10 @@ exports.getOneSauce = (req, res, next) => {
 };
 
 exports.createSauce = (req, res, next) => {
+    const sauceObj = JSON.parse(req.body.sauce);
 	const sauce = new Sauce({
-		...req.body,
+		...sauceObj,
+        imageUrl: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`
 	});
 	sauce
 		.save()
