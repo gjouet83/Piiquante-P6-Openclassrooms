@@ -12,9 +12,7 @@ exports.signup = (req, res, next) => {
 			});
 			user.save()
 				.then(() => {
-					res.status(201).json({
-						message: "Utilisateur créé avec succès",
-					});
+					res.status(201).json({ message: "Utilisateur créé avec succès"});
 				})
 				.catch((error) => {
 					res.status(400).json({ error });
@@ -29,17 +27,13 @@ exports.login = (req, res, next) => {
 	User.findOne({ email: req.body.email })
 		.then((user) => {
 			if (!user) {
-				return res
-					.status(401)
-					.json({ error });
+				return res.status(401).json({ error: "Utilisateur non enregistré" });
 			}
 			bcrypt
 				.compare(req.body.password, user.password)
 				.then((passwordOk) => {
 					if (!passwordOk) {
-						return res
-							.status(401)
-							.json({ error });
+						return res.status(401).json({ error: "Mot de passe incorrect" });
 					}
 					res.status(200).json({
 						userId: user._id,
