@@ -31,7 +31,7 @@ exports.login = (req, res, next) => {
 			if (!user) {
 				return res
 					.status(401)
-					.json({ error: "Utilisateur non enregistré" });
+					.json({ error });
 			}
 			bcrypt
 				.compare(req.body.password, user.password)
@@ -39,7 +39,7 @@ exports.login = (req, res, next) => {
 					if (!passwordOk) {
 						return res
 							.status(401)
-							.json({ error: "Mot de passe incorrect " });
+							.json({ error });
 					}
 					res.status(200).json({
 						userId: user._id,
