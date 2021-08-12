@@ -9,6 +9,7 @@ const sauceRoutes = require("./routes/sauce");
 
 const app = express();
 
+// on connecte la bdd 
 mongoose
 	.connect(process.env.APP_MONGODBURL, {
 		useNewUrlParser: true,
@@ -21,6 +22,7 @@ mongoose
 		console.log("Connexion à MongoDB échouée !");
 	});
 
+// on parametre CORS
 app.use((req, res, next) => {
 	res.setHeader("Access-Control-Allow-Origin", "*");
 	res.setHeader(
