@@ -22,7 +22,7 @@ mongoose
 		console.log("Connexion à MongoDB échouée !");
 	});
 
-// on parametre CORS
+// on parametre les headers pour eviter les erreurs cors
 app.use((req, res, next) => {
 	res.setHeader("Access-Control-Allow-Origin", "*");
 	res.setHeader(
