@@ -3,7 +3,7 @@ const fs = require("fs");
 
 // regex pour la protection d'injection de code
 const validFields = (field) => {
-	return /^[0-9A-Za-zéèàçàù'%!^¨-\s]{1,100}$/.test(field);
+	return /^[\sa-zA-Z0-9ÀÂÇÈÉÊËÎÔÙÛàâçèéêëîôöùû\.\(\)\[\]\"\'\-,;:\/!\?]+$/g.test(field);
 }
 
 exports.getAllSauces = (req, res, next) => {
@@ -27,21 +27,21 @@ exports.getOneSauce = (req, res, next) => {
 };
 
 exports.createSauce = (req, res, next) => {
-	// on teste les champs de saisie pour vérifier qu'il n'y ait pas de caractères interdits
-	if (!validFields(req.body.name)) {
-		return res.status(401).json({ message: "Caractères non autorisés"});
-	}
-	if (!validFields(req.body.manufacturer)) {
-		return res.status(401).json({ message: "Caractères non autorisés"});
-	}
-	if (!validFields(req.body.description)) {
-		return res.status(401).json({ message: "Caractères non autorisés"});
-	}
-	if (!validFields(req.body.mainPepper)) {
-		return res.status(401).json({ message: "Caractères non autorisés"});
-	}
 	// on crée un objet JSON avec la requête et on crée une nouvelle sauce en ajoutant l'url de l'image
 	const sauceObj = JSON.parse(req.body.sauce);
+	// on teste les champs de saisie pour vérifier qu'il n'y ait pas de caractères interdits
+	if (!validFields(sauceObj.name)) {
+		return res.status(406).json({ message: "Caractères non autorisés"});
+	}
+	if (!validFields(sauceObj.manufacturer)) {
+		return res.status(406).json({ message: "Caractères non autorisés"});
+	}
+	if (!validFields(sauceObj.description)) {
+		return res.status(406).json({ message: "Caractères non autorisés"});
+	}
+	if (!validFields(sauceObj.mainPepper)) {
+		return res.status(406).json({ message: "Caractères non autorisés"});
+	}
 	const sauce = new Sauce({
 		...sauceObj,
 		imageUrl: `${req.protocol}://${req.get("host")}/images/${
@@ -60,19 +60,6 @@ exports.createSauce = (req, res, next) => {
 };
 
 exports.modifySauce = (req, res, next) => {
-		// on teste les champs de saisie pour vérifier qu'il n'y ait pas de caractères interdits
-		if (!validFields(req.body.name)) {
-			return res.status(401).json({ message: "Caractères non autorisés"});
-		}
-		if (!validFields(req.body.manufacturer)) {
-			return res.status(401).json({ message: "Caractères non autorisés"});
-		}
-		if (!validFields(req.body.description)) {
-			return res.status(401).json({ message: "Caractères non autorisés"});
-		}
-		if (!validFields(req.body.mainPepper)) {
-			return res.status(401).json({ message: "Caractères non autorisés"});
-		}
 	//on crée un nouvel objet en vérifiant si la requête contient un fichier
 	const sauceObj = req.file
 		? {
@@ -82,6 +69,19 @@ exports.modifySauce = (req, res, next) => {
 				}`,
 		  }
 		: { ...req.body };
+		// on teste les champs de saisie pour vérifier qu'il n'y ait pas de caractères interdits
+		if (!validFields(sauceObj.name)) {
+			return res.status(406).json({ message: "Caractères non autorisés"});
+		}
+		if (!validFields(sauceObj.manufacturer)) {
+			return res.status(406).json({ message: "Caractères non autorisés"});
+		}
+		if (!validFields(sauceObj.description)) {
+			return res.status(406).json({ message: "Caractères non autorisés"});
+		}
+		if (!validFields(sauceObj.mainPepper)) {
+			return res.status(406).json({ message: "Caractères non autorisés"});
+		}
 	Sauce.updateOne({ _id: req.params.id }, { ...sauceObj, _id: req.params.id })
 		.then(() => {
 			res.status(200).json({ message: "Sauce modifiée avec succès" });
