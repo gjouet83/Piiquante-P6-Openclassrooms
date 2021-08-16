@@ -138,8 +138,6 @@ exports.likeSauce = (req, res, next) => {
 						.catch((error) => {
 							res.status(400).json({ error });
 						});
-				}else {
-					return res.status(401).json({ message: "Déjà Likée"})
 				}
 			})
 			.catch((error) => {
@@ -213,8 +211,6 @@ exports.likeSauce = (req, res, next) => {
 						.catch((error) => {
 							res.status(400).json({ error });
 						});
-				}else {
-					return res.status(401).json({ message: "Déjà Dislikée"})
 				}
 			})
 			.catch((error) => {
