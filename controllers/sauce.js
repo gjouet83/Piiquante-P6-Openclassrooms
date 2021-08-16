@@ -167,20 +167,28 @@ exports.likeSauce = (req, res, next) => {
 							res.status(400).json({ error });
 						});
 				} else {
-					// si like=0 et qu'il n'est pas présent dans usersLiked alors il est dans usersDisliked
-					Sauce.updateOne(
-						{ _id: req.params.id },
-						{
-							//on décrémente les dislikes et on retire le userId dans le tableau usersDisliked
-							$inc: { dislikes: -1 },
-							$pull: { usersDisliked: req.body.userId },
-							_id: req.params.id,
-						}
-					)
-						.then(() => {
-							res.status(200).json({
-								message: "Retrait du Dislike",
-							});
+					Sauce.findOne({ _id: req.params.id, usersDisliked: req.body.userId })
+						.then((alreadyDisliked) => {
+							// si like=0 et qu'il n'est pas présent dans usersLiked et qu'il est dans usersDisliked
+							if (alreadyDisliked) {
+								Sauce.updateOne(
+									{ _id: req.params.id },
+									{
+										//on décrémente les dislikes et on retire le userId dans le tableau usersDisliked
+										$inc: { dislikes: -1 },
+										$pull: { usersDisliked: req.body.userId },
+										_id: req.params.id,
+									}
+								)
+									.then(() => {
+										res.status(200).json({
+											message: "Retrait du Dislike",
+										});
+									})
+									.catch((error) => {
+										res.status(400).json({ error });
+									});
+							}
 						})
 						.catch((error) => {
 							res.status(400).json({ error });
